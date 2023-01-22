@@ -2,23 +2,33 @@ import torch
 import torch.nn as nn
 from network import Siamese
 from torchvision import transforms
+import numpy as np
 
-def train():
+def train(model, device, dataloader, loss_fn, optimizer):
+    model.train()
+    train_loss = []
+    for img_x, img_y, label in dataloader:
+        out = model(img_x, img_y)
+        loss = loss_fn(out, label)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        # Print batch loss
+        print('\t partial train loss (single batch): %f' % (loss.data))
+        train_loss.append(loss.detach().cpu().numpy())
+
+    return np.mean(train_loss)
+
+def test(model, device, dataloader, loss_fn):
+    model.eval()
+    with torch.no_grad():
+        for img_x, img_y, label in dataloader:
+            out = model(img_x, img_y)
+            loss = loss_fn(out, label)
+
     return
 
-def test():
+def plot(losses):
     return
-
-def plot():
-    return
-
-
 
 net = Siamese()
-
-img_x = torch.rand(3, 128, 128) #torch.tensor((128, 128, 3)) 
-img_y = torch.rand(3, 128, 128) #torch.tensor((128, 128, 3))
-
-
-out = net(img_x, img_y) 
-print(out)
