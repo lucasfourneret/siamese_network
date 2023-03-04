@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 
 
 class Siamese(nn.Module):
-    def __init__(self):
+    def __init__(self, input_height=64, input_width=64):
         super(Siamese, self).__init__()
 
         self.twin = nn.Sequential(
@@ -36,5 +36,5 @@ class Siamese(nn.Module):
         z = torch.add(x, y)
         z = self.body(z)
         z = nn.Flatten(0, -1)(z)
-        z = self.line(z)
+        z = nn.Linear(16384, 1)(z)
         return z

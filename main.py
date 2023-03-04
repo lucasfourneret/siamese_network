@@ -31,4 +31,12 @@ def test(model, device, dataloader, loss_fn):
 def plot(losses):
     return
 
-net = Siamese()
+net = Siamese(28, 28)
+
+tensor_size = [3,128,128]
+
+img_x = torch.rand(tensor_size)
+img_y = torch.rand(tensor_size)
+out = net(img_x, img_y)
+print(out)
+print(out.size())
